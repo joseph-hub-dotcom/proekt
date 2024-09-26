@@ -3,7 +3,7 @@ import axios from "axios";
 
 const FileUpload = () => {
   const [images, setImages] = useState([]);
-  const [file, setFile] = useState(null); // State to hold the selected file
+  const [files, setFiles] = useState([]); // State to hold the selected files
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -23,13 +23,17 @@ const FileUpload = () => {
   };
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]); // Set the selected file
+    setFiles(event.target.files); // Set the selected files (allows multiple)
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("photos", file); // Append the selected file to form data
+
+    // Append each selected file to formData
+    for (let i = 0; i < files.length; i++) {
+      formData.append("photos", files[i]);
+    }
 
     try {
       await axios.post("http://localhost:3000/api/photos/upload", formData, {
@@ -37,7 +41,7 @@ const FileUpload = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      // Optionally fetch images again to see the newly uploaded image
+      // Optionally fetch images again to see the newly uploaded images
       const response = await axios.get("http://localhost:3000/api/photos");
       setImages(response.data);
     } catch (error) {
@@ -49,8 +53,9 @@ const FileUpload = () => {
     <div>
       {/* File upload form */}
       <form onSubmit={handleSubmit}>
-        <input type="file" onChange={handleFileChange} />
-        <button type="submit">Upload Image</button>
+        <input type="file" multiple onChange={handleFileChange} />{" "}
+        {/* multiple attribute allows selecting more than one file */}
+        <button type="submit">Upload Images</button>
       </form>
 
       {/* Displaying fetched images */}
