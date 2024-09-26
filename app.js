@@ -17,7 +17,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: "https://proekt-gqf7.vercel.app", // Your Vercel frontend URL
+  methods: ["GET", "POST"], // Adjust methods as necessary
+  credentials: true, // If you need to send cookies or authorization headers
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
