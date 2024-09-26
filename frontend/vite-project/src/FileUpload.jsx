@@ -9,7 +9,7 @@ const FileUpload = () => {
     const fetchImages = async () => {
       try {
         const response = await axios.get(
-          "https://proekt-theta.vercel.app/api/photos"
+          "https://https://proekts.onrender.com/api/photos"
         );
         setImages(response.data);
       } catch (error) {
@@ -39,7 +39,7 @@ const FileUpload = () => {
 
     try {
       await axios.post(
-        "https://https://proekt-theta.vercel.app/api/photos/upload",
+        "https://https://proekts.onrender.com/api/photos/upload",
         formData,
         {
           headers: {
@@ -49,7 +49,7 @@ const FileUpload = () => {
       );
       // Optionally fetch images again to see the newly uploaded images
       const response = await axios.get(
-        "https://https://proekt-theta.vercel.app/api/photos"
+        "https://https://proekts.onrender.com/api/photos"
       );
       setImages(response.data);
     } catch (error) {
