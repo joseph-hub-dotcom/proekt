@@ -17,7 +17,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: "https://proekt-gqf7.vercel.app", // Allow requests from this origin
+  methods: ["GET", "POST", "PUT", "DELETE"], // Adjust methods as needed
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
