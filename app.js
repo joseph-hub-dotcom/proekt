@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 const corsOptions = {
   origin: "https://proekt-gqf7.vercel.app", // Your Vercel frontend URL
-  methods: ["GET", "POST"], // Adjust methods as necessary
+  methods: ["GET", "POST", "DELETE"], // Adjust methods as necessary
   credentials: true, // If you need to send cookies or authorization headers
 };
 

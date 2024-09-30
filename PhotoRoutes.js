@@ -102,6 +102,34 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const photo = await Photo.findByIdAndDelete(req.params.id);
+
+    if (!photo) {
+      return res.status(404).json({ message: "Photo not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: `Photo ${photo.filename} deleted successfully` });
+  } catch (error) {
+    console.error("Error deleting photo:", error);
+    res.status(500).json({ message: "Error deleting photo", error });
+  }
+});
+
+// Route to delete all photos
+router.delete("/", async (req, res) => {
+  try {
+    await Photo.deleteMany({});
+    res.status(200).json({ message: "All photos deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting all photos:", error);
+    res.status(500).json({ message: "Error deleting all photos", error });
+  }
+});
+
 // In your backend (app.js or photoroutes.js)
 router.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

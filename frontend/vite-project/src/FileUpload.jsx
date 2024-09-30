@@ -47,7 +47,7 @@ const FileUpload = () => {
           },
         }
       );
-      // Optionally fetch images again to see the newly uploaded images
+      // Fetch images again to see the newly uploaded images
       const response = await axios.get(
         "https://proekt.onrender.com/api/photos"
       );
@@ -57,18 +57,45 @@ const FileUpload = () => {
     }
   };
 
+  // Function to delete a specific image by its ID
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`https://proekt.onrender.com/api/photos/${id}`);
+      // Update the images state after deletion
+      setImages(images.filter((image) => image._id !== id));
+    } catch (error) {
+      console.error("Error deleting image:", error);
+    }
+  };
+
+  // Function to delete all images
+  const handleDeleteAll = async () => {
+    try {
+      await axios.delete("https://proekt.onrender.com/api/photos");
+      // Clear images after deletion
+      setImages([]);
+    } catch (error) {
+      console.error("Error deleting all images:", error);
+    }
+  };
+
   return (
     <div>
       {/* File upload form */}
       <form onSubmit={handleSubmit}>
-        <input type="file" multiple onChange={handleFileChange} />{" "}
+        <input type="file" multiple onChange={handleFileChange} />
         {/* multiple attribute allows selecting more than one file */}
         <button type="submit">Upload Images</button>
       </form>
 
+      {/* Delete All button */}
+      <button onClick={handleDeleteAll} style={{ marginTop: "10px" }}>
+        Delete All Images
+      </button>
+
       {/* Displaying fetched images */}
       {images.map((image) => (
-        <div key={image._id}>
+        <div key={image._id} style={{ marginTop: "10px" }}>
           <h3>{image.filename}</h3>
           {image.data ? (
             // For base64 data
@@ -91,6 +118,12 @@ const FileUpload = () => {
           ) : (
             <p>Image not available</p> // In case no src is available
           )}
+          {/* Delete button for each image */}
+          <button
+            onClick={() => handleDelete(image._id)}
+            style={{ marginTop: "10px" }}>
+            Delete
+          </button>
         </div>
       ))}
     </div>
