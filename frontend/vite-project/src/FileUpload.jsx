@@ -78,6 +78,29 @@ const FileUpload = () => {
     }
   };
 
+  // Function to download all images
+  const downloadAllImages = async () => {
+    try {
+      const response = await axios.get(
+        "https://proekt.onrender.com/api/photos/download",
+        {
+          responseType: "blob", // Important for handling binary data
+        }
+      );
+
+      // Create a URL for the file
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "photos.zip"); // Name of the downloaded file
+      document.body.appendChild(link);
+      link.click();
+      link.remove(); // Clean up
+    } catch (error) {
+      console.error("Error downloading all images:", error);
+    }
+  };
+
   return (
     <div>
       {/* File upload form */}
@@ -86,6 +109,11 @@ const FileUpload = () => {
         {/* multiple attribute allows selecting more than one file */}
         <button type="submit">Upload Images</button>
       </form>
+
+      {/* Download All button */}
+      <button onClick={downloadAllImages} style={{ marginTop: "10px" }}>
+        Download All Images
+      </button>
 
       {/* Delete All button */}
       <button onClick={handleDeleteAll} style={{ marginTop: "10px" }}>
@@ -117,6 +145,7 @@ const FileUpload = () => {
           ) : (
             <p>Image not available</p> // In case no src is available
           )}
+          <br />
           {/* Delete button for each image */}
           <button onClick={() => handleDelete(image._id)}>
             Delete Picture

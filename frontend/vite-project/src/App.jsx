@@ -4,7 +4,7 @@ import FileUpload from "./FileUpload";
 function App() {
   return (
     <>
-      <h1>KRISO SVADBA 2024</h1>
+      <h1>LoveLens</h1>
       <FileUpload />
     </>
   );

@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const Photo = require("./Photo");
 const router = express.Router();
+const archiver = require("archiver");
 
 // Set up multer for file uploads (in memory storage)
 const storage = multer.memoryStorage(); // Use memory storage for multer
@@ -126,6 +127,28 @@ router.delete("/", async (req, res) => {
   } catch (error) {
     console.error("Error deleting all photos:", error);
     res.status(500).json({ message: "Error deleting all photos", error });
+  }
+});
+
+// Route to download all images as a ZIP file
+router.get("/download", async (req, res) => {
+  try {
+    const photos = await Photo.find();
+
+    // Create a zip archive
+    const archive = archiver("zip");
+    res.attachment("photos.zip"); // Name of the zip file
+    archive.pipe(res); // Pipe the archive to the response
+
+    // Append each image to the archive
+    for (const photo of photos) {
+      archive.append(photo.data, { name: photo.filename });
+    }
+
+    await archive.finalize(); // Finalize the archive
+  } catch (error) {
+    console.error("Error downloading photos:", error);
+    res.status(500).json({ message: "Error downloading photos", error });
   }
 });
 
