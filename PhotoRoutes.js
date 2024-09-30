@@ -103,13 +103,12 @@ router.get("/", async (req, res) => {
 });
 
 router.delete("/delete/:id", async (req, res) => {
+  console.log("Deleting photo with ID:", req.params.id); // Log the ID being deleted
   try {
     const photo = await Photo.findByIdAndDelete(req.params.id);
-
     if (!photo) {
       return res.status(404).json({ message: "Photo not found" });
     }
-
     res
       .status(200)
       .json({ message: `Photo ${photo.filename} deleted successfully` });

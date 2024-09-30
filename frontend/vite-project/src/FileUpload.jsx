@@ -57,12 +57,11 @@ const FileUpload = () => {
     }
   };
 
-  // Function to delete a specific image by its ID
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://proekt.onrender.com/api/photos/${id}`);
-      // Update the images state after deletion
-      setImages(images.filter((image) => image._id !== id));
+      await axios.delete(`https://proekt.onrender.com/api/photos/delete/${id}`);
+      // Optionally, refetch images or update state
+      setImages(images.filter((image) => image._id !== id)); // Update the local state to remove the deleted image
     } catch (error) {
       console.error("Error deleting image:", error);
     }
@@ -119,10 +118,8 @@ const FileUpload = () => {
             <p>Image not available</p> // In case no src is available
           )}
           {/* Delete button for each image */}
-          <button
-            onClick={() => handleDelete(image._id)}
-            style={{ marginTop: "10px" }}>
-            Delete
+          <button onClick={() => handleDelete(image._id)}>
+            Delete Picture
           </button>
         </div>
       ))}
