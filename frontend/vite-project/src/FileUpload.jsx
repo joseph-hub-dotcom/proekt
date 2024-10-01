@@ -36,11 +36,7 @@ const FileUpload = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-<<<<<<< HEAD
       // Fetch images again to see the newly uploaded images
-=======
-
->>>>>>> 711b461edad6b748cf0509ae6bec83005c143f27
       const response = await axios.get("http://localhost:3000/api/photos");
       setImages(response.data);
     } catch (error) {
@@ -51,18 +47,13 @@ const FileUpload = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/photos/delete/${id}`);
-<<<<<<< HEAD
       // Optionally, refetch images or update state
       setImages(images.filter((image) => image._id !== id)); // Update the local state to remove the deleted image
-=======
-      setImages(images.filter((image) => image._id !== id));
->>>>>>> 711b461edad6b748cf0509ae6bec83005c143f27
     } catch (error) {
       console.error("Error deleting image:", error);
     }
   };
 
-<<<<<<< HEAD
   // Function to delete all images
   const handleDeleteAll = async () => {
     try {
@@ -163,29 +154,6 @@ const FileUpload = () => {
           </div>
         ))}
       </div>
-=======
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input type="file" multiple onChange={handleFileChange} />
-        <button type="submit">Upload Images</button>
-      </form>
-
-      {images.length > 0 ? (
-        images.map((image) => (
-          <div key={image._id}>
-            <h3>{image.filename}</h3>
-            <img
-              src={`data:${image.contentType};base64,${image.data}`}
-              alt={image.filename}
-              style={{ width: "200px", height: "auto" }}
-            />
-          </div>
-        ))
-      ) : (
-        <p>No images found.</p>
-      )}
->>>>>>> 711b461edad6b748cf0509ae6bec83005c143f27
     </div>
   );
 };
