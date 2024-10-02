@@ -2,7 +2,8 @@
 const mongoose = require("mongoose");
 const Admin = require("./Admin");
 
-const mongoURI = "mongodb+srv://josifj29:proektsvadba123@proektcluster.fvu25.mongodb.net/?retryWrites=true&w=majority&appName=ProektCluster"; // Replace with your actual database URI
+const mongoURI =
+  "mongodb+srv://josifj29:proektsvadba123@proektcluster.fvu25.mongodb.net/?retryWrites=true&w=majority&appName=ProektCluster"; // Replace with your actual database URI
 
 mongoose
   .connect(mongoURI)

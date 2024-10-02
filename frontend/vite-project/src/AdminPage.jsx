@@ -10,7 +10,8 @@ const AdminPanel = () => {
 
   useEffect(() => {
     const checkAuthentication = () => {
-      const authenticated = localStorage.getItem("isAdminAuthenticated") === "true";
+      const authenticated =
+        localStorage.getItem("isAdminAuthenticated") === "true";
       if (authenticated) {
         setIsAuthenticated(true);
       } else {
@@ -31,7 +32,9 @@ const AdminPanel = () => {
     const fetchAdminPassword = async () => {
       if (isModalOpen) {
         try {
-          const response = await axios.get("http://localhost:3000/api/admin/password");
+          const response = await axios.get(
+            "http://localhost:3000/api/admin/password"
+          );
           setCorrectPassword(response.data.password);
         } catch (error) {
           console.error("Error fetching admin password:", error);
@@ -107,8 +110,12 @@ const AdminPanel = () => {
   };
 
   // Count images and videos
-  const imageCount = media.filter(item => item.contentType.startsWith('image/')).length;
-  const videoCount = media.filter(item => item.contentType.startsWith('video/')).length;
+  const imageCount = media.filter((item) =>
+    item.contentType.startsWith("image/")
+  ).length;
+  const videoCount = media.filter((item) =>
+    item.contentType.startsWith("video/")
+  ).length;
 
   return (
     <div className="flex flex-col items-center p-5">
@@ -125,22 +132,19 @@ const AdminPanel = () => {
         <div className="mb-4">
           <button
             onClick={handleLogout}
-            className="bg-[#e0ffcd] text-black font-bold py-2 px-4 rounded mr-2"
-          >
+            className="bg-[#e0ffcd] text-black font-bold py-2 px-4 rounded mr-2">
             Logout
           </button>
 
           <button
             onClick={downloadAllImages}
-            className="bg-[#e0ffcd] text-black font-bold py-2 px-4 rounded mr-2"
-          >
+            className="bg-[#e0ffcd] text-black font-bold py-2 px-4 rounded mr-2">
             Download All Images
           </button>
 
           <button
             onClick={handleDeleteAll}
-            className="bg-[#ffcab0] text-black font-bold py-2 px-4 rounded"
-          >
+            className="bg-[#ffcab0] text-black font-bold py-2 px-4 rounded">
             Delete All Images
           </button>
         </div>
@@ -166,8 +170,7 @@ const AdminPanel = () => {
                 )}
                 <button
                   onClick={() => handleDelete(item._id)}
-                  className="bg-[#e0ffcd] text-black font-bold py-1 px-2 rounded mt-2"
-                >
+                  className="bg-[#e0ffcd] text-black font-bold py-1 px-2 rounded mt-2">
                   Delete Picture
                 </button>
               </div>

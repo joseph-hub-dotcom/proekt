@@ -28,6 +28,18 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get("/api/admin/password", async (req, res) => {
+  try {
+    const admin = await Admin.findOne();
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+    res.json({ password: admin.password });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching admin password", error });
+  }
+});
+
 // Use photo routes
 app.use("/api/photos", photoRoutes);
 
