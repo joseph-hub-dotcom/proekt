@@ -21,14 +21,19 @@ const FileUpload = () => {
     fetchImages();
   }, []);
 
+  const handleImageError = (filename) => {
+    console.warn(`Image file not found for: ${filename}`);
+  };
+
   const handleFileChange = (event) => {
-    setFiles(event.target.files);
+    setFiles(event.target.files); // Set the selected files (allows multiple)
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
 
+    // Append each selected file to formData
     for (let i = 0; i < files.length; i++) {
       formData.append("photos", files[i]);
     }

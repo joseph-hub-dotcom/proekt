@@ -43,19 +43,6 @@ app.get("/api/admin/password", async (req, res) => {
 // Use photo routes
 app.use("/api/photos", photoRoutes);
 
-// Route to fetch the admin password
-app.get("/api/admin/password", async (req, res) => {
-  try {
-    const admin = await Admin.findOne();
-    if (!admin) {
-      return res.status(404).json({ message: "Admin not found" });
-    }
-    res.json({ password: admin.password });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching admin password", error });
-  }
-});
-
 // Serve static files from the uploads directory
 app.use("/uploads", express.static("uploads"));
 
