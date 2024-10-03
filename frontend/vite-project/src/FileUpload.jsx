@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { InfinitySpin } from "react-loader-spinner"; // Import the spinner
 
 const FileUpload = () => {
   const [images, setImages] = useState([]);
@@ -7,14 +8,18 @@ const FileUpload = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [uploadMessage, setUploadMessage] = useState(""); // State for upload message
+  const [loading, setLoading] = useState(false); // State for loading
 
   useEffect(() => {
     const fetchImages = async () => {
+      setLoading(true); // Set loading to true
       try {
         const response = await axios.get("http://localhost:3000/api/photos");
         setImages(response.data);
       } catch (error) {
         console.error("Error fetching images:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -38,6 +43,7 @@ const FileUpload = () => {
       formData.append("photos", files[i]);
     }
 
+    setLoading(true); // Set loading to true
     try {
       await axios.post("http://localhost:3000/api/photos/upload", formData, {
         headers: {
@@ -53,9 +59,9 @@ const FileUpload = () => {
       setTimeout(() => setUploadMessage(""), 3000);
     } catch (error) {
       console.error("Error uploading files:", error);
+    } finally {
+      setLoading(false); // Set loading to false after uploading
     }
-
-    // Set the upload message
   };
 
   const handleDelete = async (id) => {
@@ -123,19 +129,24 @@ const FileUpload = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 bg-[#feffdf]">
+    <div className="container mx-auto p-4 bg-[#fcfefe]">
+      <p className="mb-3 text-4xl font-bold font-yellowtail text-center text-[#c51350] dark:text-[#c51350] font-parisienne">
+        Rozita and David's Farewell
+      </p>
       {/* File upload form */}
-      <form onSubmit={handleSubmit} className="mb-4">
+      <form
+        onSubmit={handleSubmit}
+        className="mb-4  flex items-center space-x-4">
         <input
           type="file"
           multiple
           onChange={handleFileChange}
-          className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+          className="text-white h-11 w-[59%] bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
         />
         <button
           type="submit"
-          className="text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-          Upload Images
+          className="text-gray-900 h-11 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+          Upload Photo
         </button>
       </form>
 
@@ -143,6 +154,18 @@ const FileUpload = () => {
       {uploadMessage && (
         <div className="bg-green-500 text-white p-2 rounded mb-4">
           {uploadMessage}
+        </div>
+      )}
+
+      {/* Spinner Loading */}
+      {loading && (
+        <div className="flex justify-center mb-4">
+          <InfinitySpin
+            visible={true}
+            width="200"
+            color="#c3195d"
+            ariaLabel="infinity-spin-loading"
+          />
         </div>
       )}
 
@@ -170,7 +193,7 @@ const FileUpload = () => {
             {image.data ? (
               // For base64 data
               <img
-                className="absolute inset-0 w-full h-full object-cover rounded-lg border-2 border-yellow-400 shadow-lg transition-transform duration-200 hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover rounded-lg border-2 border-[#f76b8a] shadow-lg transition-transform duration-200 hover:scale-105"
                 src={`data:${image.contentType};base64,${image.data.toString(
                   "base64"
                 )}`}
@@ -180,7 +203,7 @@ const FileUpload = () => {
             ) : image.imageUrl ? (
               // For images stored as URLs
               <img
-                className="absolute inset-0 w-full h-full object-cover rounded-lg border-2 border-yellow-400 shadow-lg transition-transform duration-200 hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover rounded-lg border-2 border-[#f76b8a] shadow-lg transition-transform duration-200 hover:scale-105"
                 src={image.imageUrl}
                 alt={image.filename}
                 onError={() => handleImageError(image.filename)}
