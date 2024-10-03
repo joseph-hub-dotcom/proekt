@@ -33,7 +33,7 @@ const AdminPanel = () => {
       if (isModalOpen) {
         try {
           const response = await axios.get(
-            "https://proekt.onrender.com/api/admin/password"
+            "https://proekt-gqf7.vercel.app/api/admin/password"
           );
           setCorrectPassword(response.data.password);
         } catch (error) {
