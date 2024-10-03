@@ -33,7 +33,7 @@ const AdminPanel = () => {
       if (isModalOpen) {
         try {
           const response = await axios.get(
-            "http://localhost:3000/api/admin/password"
+            "https://proekt.onrender.com/api/admin/password"
           );
           setCorrectPassword(response.data.password);
         } catch (error) {
@@ -47,7 +47,9 @@ const AdminPanel = () => {
 
   const fetchMedia = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/photos"); // Adjust the endpoint if needed
+      const response = await axios.get(
+        "https://proekt.onrender.com/api/photos"
+      ); // Adjust the endpoint if needed
       setMedia(response.data);
     } catch (error) {
       console.error("Error fetching media:", error);
@@ -66,7 +68,7 @@ const AdminPanel = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/photos/delete/${id}`);
+      await axios.delete(`https://proekt.onrender.com/api/photos/delete/${id}`);
       setMedia(media.filter((item) => item._id !== id));
     } catch (error) {
       console.error("Error deleting media:", error);
@@ -75,7 +77,7 @@ const AdminPanel = () => {
 
   const handleDeleteAll = async () => {
     try {
-      await axios.delete("http://localhost:3000/api/photos");
+      await axios.delete("https://proekt.onrender.com/api/photos");
       setMedia([]);
     } catch (error) {
       console.error("Error deleting all media:", error);
@@ -85,7 +87,7 @@ const AdminPanel = () => {
   const downloadAllImages = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/photos/download",
+        "https://proekt.onrender.com/api/photos/download",
         {
           responseType: "blob",
         }
