@@ -64,24 +64,11 @@ const FileUpload = (props) => {
 
     setLoading(true); // Set loading to true
     try {
-<<<<<<< HEAD
-      await axios.post(
-        "https://proekt.onrender.com/api/photos/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-=======
       await axios.post("http://localhost:3000/api/photos/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
->>>>>>> my-old-code
       // Fetch images again to see the newly uploaded images
       const response = await axios.get(
         "https://proekt.onrender.com/api/photos"
