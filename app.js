@@ -19,11 +19,10 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 const corsOptions = {
-  origin: "https://proekt-gqf7.vercel.app", // Your Vercel frontend URL
-  methods: ["GET", "POST", "DELETE"], // Adjust methods as necessary
-  credentials: true, // If you need to send cookies or authorization headers
+  origin: ["https://proekt-gqf7.vercel.app", "http://localhost:5173"], // Your Vercel frontend and local frontend
+  methods: ["GET", "POST", "DELETE"],
+  credentials: true,
 };
-
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -147,7 +147,7 @@ const AdminPanel = () => {
           <button
             onClick={handleDeleteAll}
             className="bg-[#ffcab0] text-black font-bold py-2 px-4 rounded">
-            Delete All Images
+            Delete All Imagesss
           </button>
         </div>
       )}
