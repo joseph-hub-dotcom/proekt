@@ -163,7 +163,7 @@ const FileUpload = (props) => {
       {/* File upload form */}
       <form
         onSubmit={handleSubmit}
-        className="mb-4  flex justify-center items-center space-x-4">
+        className="mb-4 w-full flex justify-center items-center gap-3">
         <input
           type="file"
           id="hiddenFileInput"
@@ -175,18 +175,24 @@ const FileUpload = (props) => {
         <Button
           variant="gradient"
           color="indigo"
-          className="flex items-center gap-3"
+          className="flex items-center gap-3 w-[180px] h-[45px]"
           onClick={handleButtonClick}>
           <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
             <path d="M19 13a1 1 0 00-1 1v.38l-1.48-1.48a2.79 2.79 0 00-3.93 0l-.7.7-2.48-2.48a2.85 2.85 0 00-3.93 0L4 12.6V7a1 1 0 011-1h7a1 1 0 000-2H5a3 3 0 00-3 3v12a3 3 0 003 3h12a3 3 0 003-3v-5a1 1 0 00-1-1zM5 20a1 1 0 01-1-1v-3.57l2.9-2.9a.79.79 0 011.09 0l3.17 3.17 4.3 4.3zm13-1a.89.89 0 01-.18.53L13.31 15l.7-.7a.77.77 0 011.1 0L18 17.21zm4.71-14.71l-3-3a1 1 0 00-.33-.21 1 1 0 00-.76 0 1 1 0 00-.33.21l-3 3a1 1 0 001.42 1.42L18 4.41V10a1 1 0 002 0V4.41l1.29 1.3a1 1 0 001.42 0 1 1 0 000-1.42z" />
           </svg>
-          {firstFileName ? `Choose Files (${firstFileName})` : "Choose Files"}
+          {firstFileName
+            ? `Choose Files (${
+                firstFileName.length > 5
+                  ? firstFileName.substring(0, 5) + "..."
+                  : firstFileName
+              })`
+            : "Choose Files"}
         </Button>
         <Button
           variant="gradient"
           color="pink"
           type="submit"
-          className="flex  items-center gap-3"
+          className="flex  items-center gap-3 w-[180px] h-[45px]"
           ripple={true}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
