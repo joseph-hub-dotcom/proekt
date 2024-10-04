@@ -4,7 +4,7 @@ import FileUpload from "./FileUpload";
 import Navbar from "./NavBar";
 import AdminPage from "./AdminPage"; // Import your AdminPage component
 
-function App() {
+const App = () => {
   return (
     <>
       <Router>
@@ -23,6 +23,6 @@ function App() {
       </Router>
     </>
   );
-}
+};
 
 export default App;

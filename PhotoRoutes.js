@@ -3,9 +3,11 @@ const multer = require("multer");
 const Photo = require("./Photo");
 const router = express.Router();
 const archiver = require("archiver");
+const path = require("path");
+const fs = require("fs");
 
 // Set up multer for file uploads (in memory storage)
-const storage = multer.memoryStorage(); // Use memory storage for multer
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router.post("/upload", upload.array("photos"), async (req, res) => {
@@ -20,7 +22,7 @@ router.post("/upload", upload.array("photos"), async (req, res) => {
     for (const file of req.files) {
       const newPhoto = new Photo({
         filename: file.originalname,
-        data: file.buffer, // Save the binary data
+        data: file.buffer,
         contentType: file.mimetype,
       });
 
@@ -34,67 +36,21 @@ router.post("/upload", upload.array("photos"), async (req, res) => {
     });
   } catch (err) {
     console.error("Error saving photos:", err);
-    res
-      .status(500)
-      .json({ message: "Error saving photos", error: err.message });
+    res.status(500).json({ message: "Error saving photos", error: err.message });
   }
 });
 
-// Route to fetch a specific image by its ID and display it
-router.get("/image/:id", async (req, res) => {
-  try {
-    const photo = await Photo.findById(req.params.id);
-
-    if (!photo) {
-      return res.status(404).json({ message: "Image not found" });
-    }
-
-    console.log(`Serving image: ${photo.filename}`);
-    res.set("Content-Type", photo.contentType); // Set content type dynamically
-    res.send(photo.data); // Send the binary data directly as the response
-  } catch (error) {
-    console.error("Error fetching image:", error);
-    res.status(500).json({ message: "Error fetching image", error });
-  }
-});
-
-// Route to fetch all image metadata (without the binary data)
-const fs = require("fs");
-const path = require("path");
-
+// Fetch all image metadata (without binary data)
 router.get("/", async (req, res) => {
   try {
     const photos = await Photo.find();
     const formattedPhotos = photos.map((photo) => {
-      if (photo.data) {
-        // Send base64 string for binary images stored in DB
-        return {
-          _id: photo._id,
-          filename: photo.filename,
-          data: photo.data.toString("base64"), // Convert to base64
-          contentType: photo.contentType,
-        };
-      } else {
-        // Check if the file exists in uploads folder
-        const filePath = path.join(__dirname, "uploads", photo.filename);
-        if (fs.existsSync(filePath)) {
-          // If the file exists, return its URL
-          return {
-            _id: photo._id,
-            filename: photo.filename,
-            imageUrl: photo.imageUrl,
-            contentType: photo.contentType,
-          };
-        } else {
-          // If file is missing, return a placeholder or error
-          return {
-            _id: photo._id,
-            filename: photo.filename,
-            imageUrl: "http://localhost:3000/uploads/placeholder.png", // Placeholder image
-            contentType: photo.contentType,
-          };
-        }
-      }
+      return {
+        _id: photo._id,
+        filename: photo.filename,
+        contentType: photo.contentType,
+        data: photo.data.toString("base64"), // Convert to base64 for frontend display
+      };
     });
     res.json(formattedPhotos);
   } catch (error) {
@@ -103,16 +59,14 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Delete a specific photo
 router.delete("/delete/:id", async (req, res) => {
-  console.log("Deleting photo with ID:", req.params.id); // Log the ID being deleted
   try {
     const photo = await Photo.findByIdAndDelete(req.params.id);
     if (!photo) {
       return res.status(404).json({ message: "Photo not found" });
     }
-    res
-      .status(200)
-      .json({ message: `Photo ${photo.filename} deleted successfully` });
+    res.status(200).json({ message: `Photo ${photo.filename} deleted successfully` });
   } catch (error) {
     console.error("Error deleting photo:", error);
     res.status(500).json({ message: "Error deleting photo", error });
@@ -134,25 +88,20 @@ router.delete("/", async (req, res) => {
 router.get("/download", async (req, res) => {
   try {
     const photos = await Photo.find();
-
-    // Create a zip archive
     const archive = archiver("zip");
-    res.attachment("photos.zip"); // Name of the zip file
-    archive.pipe(res); // Pipe the archive to the response
+    res.attachment("photos.zip");
+    archive.pipe(res);
 
-    // Append each image to the archive
     for (const photo of photos) {
       archive.append(photo.data, { name: photo.filename });
     }
 
-    await archive.finalize(); // Finalize the archive
+    await archive.finalize();
   } catch (error) {
     console.error("Error downloading photos:", error);
     res.status(500).json({ message: "Error downloading photos", error });
   }
 });
 
-// In your backend (app.js or photoroutes.js)
-router.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 module.exports = router;
