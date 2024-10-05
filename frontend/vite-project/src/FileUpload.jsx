@@ -18,7 +18,7 @@ const FileUpload = (props) => {
     const fetchImages = async () => {
       setLoading(true); // Set loading to true
       try {
-        const response = await axios.get("http://localhost:3000/api/photos");
+        const response = await axios.get("https://proekt.onrender.com/api/photos");
         setImages(response.data);
       } catch (error) {
         console.error("Error fetching images:", error);
@@ -62,14 +62,14 @@ const FileUpload = (props) => {
 
     setLoading(true); // Set loading to true
     try {
-      await axios.post("http://localhost:3000/api/photos/upload", formData, {
+      await axios.post("https://proekt.onrender.com/api/photos/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       // Fetch images again to see the newly uploaded images
-      const response = await axios.get("http://localhost:3000/api/photos");
+      const response = await axios.get("https://proekt.onrender.com/api/photos");
       setImages(response.data);
       setUploadMessage(`Your uploads are live!`);
 
@@ -87,7 +87,7 @@ const FileUpload = (props) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/photos/delete/${id}`);
+      await axios.delete(`https://proekt.onrender.com/api/photos/delete/${id}`);
       // Optionally, refetch images or update state
       setImages(images.filter((image) => image._id !== id)); // Update the local state to remove the deleted image
     } catch (error) {
@@ -98,7 +98,7 @@ const FileUpload = (props) => {
   // Function to delete all images
   const handleDeleteAll = async () => {
     try {
-      await axios.delete("http://localhost:3000/api/photos");
+      await axios.delete("https://proekt.onrender.com/api/photos");
       // Clear images after deletion
       setImages([]);
     } catch (error) {
@@ -110,7 +110,7 @@ const FileUpload = (props) => {
   const downloadAllImages = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/photos/download",
+        "https://proekt.onrender.com/api/photos/download",
         {
           responseType: "blob", // Important for handling binary data
         }
