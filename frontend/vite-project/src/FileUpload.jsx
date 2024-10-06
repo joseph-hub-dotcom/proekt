@@ -18,7 +18,7 @@ const FileUpload = (props) => {
     const fetchImages = async () => {
       setLoading(true); // Set loading to true
       try {
-        const response = await axios.get("https://proekt.onrender.com/api/photos");
+        const response = await axios.get("http://localhost:3000/api/photos");
         setImages(response.data);
       } catch (error) {
         console.error("Error fetching images:", error);
@@ -62,14 +62,14 @@ const FileUpload = (props) => {
 
     setLoading(true); // Set loading to true
     try {
-      await axios.post("https://proekt.onrender.com/api/photos/upload", formData, {
+      await axios.post("http://localhost:3000/api/photos/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       // Fetch images again to see the newly uploaded images
-      const response = await axios.get("https://proekt.onrender.com/api/photos");
+      const response = await axios.get("http://localhost:3000/api/photos");
       setImages(response.data);
       setUploadMessage(`Your uploads are live!`);
 
@@ -82,50 +82,6 @@ const FileUpload = (props) => {
       console.error("Error uploading files:", error);
     } finally {
       setLoading(false); // Set loading to false after uploading
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`https://proekt.onrender.com/api/photos/delete/${id}`);
-      // Optionally, refetch images or update state
-      setImages(images.filter((image) => image._id !== id)); // Update the local state to remove the deleted image
-    } catch (error) {
-      console.error("Error deleting image:", error);
-    }
-  };
-
-  // Function to delete all images
-  const handleDeleteAll = async () => {
-    try {
-      await axios.delete("https://proekt.onrender.com/api/photos");
-      // Clear images after deletion
-      setImages([]);
-    } catch (error) {
-      console.error("Error deleting all images:", error);
-    }
-  };
-
-  // Function to download all images
-  const downloadAllImages = async () => {
-    try {
-      const response = await axios.get(
-        "https://proekt.onrender.com/api/photos/download",
-        {
-          responseType: "blob", // Important for handling binary data
-        }
-      );
-
-      // Create a URL for the file
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "photos.zip"); // Name of the downloaded file
-      document.body.appendChild(link);
-      link.click();
-      link.remove(); // Clean up
-    } catch (error) {
-      console.error("Error downloading all images:", error);
     }
   };
 
@@ -158,7 +114,7 @@ const FileUpload = (props) => {
   return (
     <div className="container mx-auto p-4 bg-[#fcfefe]">
       <p className="mb-3 text-4xl font-bold font-yellowtail text-center text-[#c51350] dark:text-[#c51350] font-parisienne">
-        Rozita and David's Farewell
+        Rozita and David's Wedding
       </p>
       {/* File upload form */}
       <form
@@ -175,7 +131,7 @@ const FileUpload = (props) => {
         <Button
           variant="gradient"
           color="indigo"
-          className="flex items-center gap-3 w-[180px] h-[45px]"
+          className="flex items-center font-nunito font-bold gap-3 w-[180px] h-[45px]"
           onClick={handleButtonClick}>
           <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
             <path d="M19 13a1 1 0 00-1 1v.38l-1.48-1.48a2.79 2.79 0 00-3.93 0l-.7.7-2.48-2.48a2.85 2.85 0 00-3.93 0L4 12.6V7a1 1 0 011-1h7a1 1 0 000-2H5a3 3 0 00-3 3v12a3 3 0 003 3h12a3 3 0 003-3v-5a1 1 0 00-1-1zM5 20a1 1 0 01-1-1v-3.57l2.9-2.9a.79.79 0 011.09 0l3.17 3.17 4.3 4.3zm13-1a.89.89 0 01-.18.53L13.31 15l.7-.7a.77.77 0 011.1 0L18 17.21zm4.71-14.71l-3-3a1 1 0 00-.33-.21 1 1 0 00-.76 0 1 1 0 00-.33.21l-3 3a1 1 0 001.42 1.42L18 4.41V10a1 1 0 002 0V4.41l1.29 1.3a1 1 0 001.42 0 1 1 0 000-1.42z" />
@@ -188,39 +144,41 @@ const FileUpload = (props) => {
               })`
             : "Choose Files"}
         </Button>
-        <Button
-          variant="gradient"
-          color="pink"
-          type="submit"
-          className="flex  items-center gap-3 w-[180px] h-[45px]"
-          ripple={true}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="h-5 w-5">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-            />
-          </svg>
-          <p>Upload Photo</p>
-        </Button>
+        {files.length > 0 && (
+          <Button
+            variant="gradient"
+            color="pink"
+            type="submit"
+            className="flex items-center font-nunito font-bold gap-3 w-[180px] h-[45px]"
+            ripple={true}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="h-5 w-5">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+              />
+            </svg>
+            <p>Upload Photos</p>
+          </Button>
+        )}
       </form>
 
       {/* Upload Message */}
       {uploadMessage && (
-        <Alert color="green" className="mb-4 text-white">
+        <Alert color="green" className="mb-4 font-poppins font-md text-white">
           {uploadMessage}
         </Alert>
       )}
 
       {/* Spinner Loading */}
       {loading && (
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center items-center mb-4">
           <InfinitySpin
             visible={true}
             width="200"
@@ -229,20 +187,6 @@ const FileUpload = (props) => {
           />
         </div>
       )}
-
-      {/* Action Buttons */}
-      {/*<div className="flex flex-col md:flex-row md:space-x-4 mb-4">
-        <button
-          onClick={downloadAllImages}
-          className="bg-green-500 text-white rounded px-4 py-2 hover:bg-green-600">
-          Download All Images
-        </button>
-        <button
-          onClick={handleDeleteAll}
-          className="bg-red-500 text-white rounded px-4 py-2 hover:bg-red-600 mt-2 md:mt-0">
-          Delete All Images
-        </button>
-      </div>*/}
 
       {/* Grid Layout */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -272,11 +216,6 @@ const FileUpload = (props) => {
             ) : (
               <p className="text-center">Image not available</p>
             )}
-            {/*<button
-              className=" bg-red-500 text-white rounded px-2 py-1 text-sm hover:bg-red-600"
-              onClick={() => handleDelete(image._id)}>
-              Delete Picture
-            </button>*/}
           </div>
         ))}
       </div>

@@ -1,11 +1,15 @@
 import React from "react";
-import logo from "./lovelens.png";
+import logo from "./white-transp.png";
 
 const Navbar = () => {
   return (
-    <nav className="bg-[#eaf6f6] p-4 border-[#f76b8a] shadow-lg border-b-[5px]">
-      <div className="container mx-auto flex justify-center">
-        <img src={logo} alt="Lens Logo" className="h-10" />
+    <nav className="bg-[#EC2784] p-0 border-[#f76b8a] shadow-lg border-b-[5px]">
+      <div className="container mx-auto flex justify-center h-20 items-center">
+        <img
+          src={logo}
+          alt="Lovies Logo"
+          className="h-[50%] w-[60%] object-contain"
+        />
       </div>
     </nav>
   );

@@ -10,7 +10,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        yellowtail: ["Yellowtail", "cursive"], // Define Yellowtail font
+        yellowtail: ["Yellowtail", "cursive"],
+        nunito: ["Nunito", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
       },
     },
   },
