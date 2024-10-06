@@ -18,7 +18,7 @@ const FileUpload = (props) => {
     const fetchImages = async () => {
       setLoading(true); // Set loading to true
       try {
-        const response = await axios.get("http://localhost:3000/api/photos");
+        const response = await axios.get("https://proekt.onrender.com/api/photos");
         setImages(response.data);
       } catch (error) {
         console.error("Error fetching images:", error);
@@ -62,14 +62,14 @@ const FileUpload = (props) => {
 
     setLoading(true); // Set loading to true
     try {
-      await axios.post("http://localhost:3000/api/photos/upload", formData, {
+      await axios.post("https://proekt.onrender.com/api/photos/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       // Fetch images again to see the newly uploaded images
-      const response = await axios.get("http://localhost:3000/api/photos");
+      const response = await axios.get("https://proekt.onrender.com/api/photos");
       setImages(response.data);
       setUploadMessage(`Your uploads are live!`);
 
