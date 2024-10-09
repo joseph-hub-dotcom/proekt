@@ -10,34 +10,36 @@ const fs = require("fs");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+// Route to upload photos
+// Handle file uploads
 router.post("/upload", upload.array("photos"), async (req, res) => {
-  try {
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ message: "No files uploaded" });
+  const io = req.app.get("io"); // Get the io instance
+
+  if (req.files) {
+    try {
+      // Loop through the uploaded files
+      for (const file of req.files) {
+        // Create a new photo document
+        const newPhoto = new Photo({
+          filename: file.originalname,
+          contentType: file.mimetype,
+          data: file.buffer, // Save the file buffer
+        });
+
+        // Save the photo to the database
+        await newPhoto.save();
+      }
+
+      // Emit the new image uploaded event
+      io.emit("newImageUploaded"); // Emit event to notify all clients
+      return res.status(200).json({ message: "Files uploaded successfully" });
+    } catch (error) {
+      console.error("Error saving files to the database:", error);
+      return res.status(500).json({ message: "Error saving files", error });
     }
-
-    const uploadedPhotos = [];
-
-    // Save each uploaded file to the database as binary data
-    for (const file of req.files) {
-      const newPhoto = new Photo({
-        filename: file.originalname,
-        data: file.buffer,
-        contentType: file.mimetype,
-      });
-
-      await newPhoto.save();
-      uploadedPhotos.push(newPhoto);
-    }
-
-    res.status(201).json({
-      message: "Photos uploaded successfully",
-      photos: uploadedPhotos,
-    });
-  } catch (err) {
-    console.error("Error saving photos:", err);
-    res.status(500).json({ message: "Error saving photos", error: err.message });
   }
+
+  res.status(400).json({ message: "No files were uploaded" });
 });
 
 // Fetch all image metadata (without binary data)
@@ -66,7 +68,9 @@ router.delete("/delete/:id", async (req, res) => {
     if (!photo) {
       return res.status(404).json({ message: "Photo not found" });
     }
-    res.status(200).json({ message: `Photo ${photo.filename} deleted successfully` });
+    res
+      .status(200)
+      .json({ message: `Photo ${photo.filename} deleted successfully` });
   } catch (error) {
     console.error("Error deleting photo:", error);
     res.status(500).json({ message: "Error deleting photo", error });
@@ -102,6 +106,5 @@ router.get("/download", async (req, res) => {
     res.status(500).json({ message: "Error downloading photos", error });
   }
 });
-
 
 module.exports = router;

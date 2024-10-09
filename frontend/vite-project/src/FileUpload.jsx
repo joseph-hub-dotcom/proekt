@@ -3,6 +3,7 @@ import axios from "axios";
 import { InfinitySpin } from "react-loader-spinner"; // Import the spinner
 import { Badge, Button } from "@material-tailwind/react";
 import { Alert } from "@material-tailwind/react";
+import { io } from "socket.io-client"; // Import Socket.IO Client
 
 const FileUpload = (props) => {
   const [images, setImages] = useState([]);
@@ -16,18 +17,34 @@ const FileUpload = (props) => {
 
   useEffect(() => {
     const fetchImages = async () => {
-      setLoading(true); // Set loading to true
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:3000/api/photos");
-        setImages(response.data);
+        console.log("Fetched images:", response.data); // Log the fetched images
+        setImages(response.data.reverse());
       } catch (error) {
         console.error("Error fetching images:", error);
       } finally {
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false);
       }
     };
 
     fetchImages();
+
+    // Connect to Socket.IO server
+    const socket = io("http://localhost:3000", {
+      withCredentials: true, // This should allow for cookie-based authentication if needed
+    });
+
+    // Listen for the new image upload event
+    socket.on("newImageUploaded", async () => {
+      const response = await axios.get("http://localhost:3000/api/photos");
+      setImages(response.data.reverse());
+    });
+
+    return () => {
+      socket.disconnect(); // Clean up on component unmount
+    };
   }, []);
 
   const handleImageError = (filename) => {
@@ -55,23 +72,27 @@ const FileUpload = (props) => {
     event.preventDefault();
     const formData = new FormData();
 
-    // Append each selected file to formData
     for (let i = 0; i < files.length; i++) {
       formData.append("photos", files[i]);
     }
 
     setLoading(true); // Set loading to true
+    setUploadMessage(""); // Clear any previous messages
+
     try {
+      // Upload the files
       await axios.post("http://localhost:3000/api/photos/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      // Fetch images again to see the newly uploaded images
+      // Fetch images immediately after successful upload
       const response = await axios.get("http://localhost:3000/api/photos");
-      setImages(response.data);
-      setUploadMessage(`Your uploads are live!`);
+      setImages(response.data.reverse());
+
+      // Set the success message after fetching the images
+      setUploadMessage("Your uploads are live!");
 
       // Clear the name of the first file after upload
       setFirstFileName(""); // Reset file name after upload
@@ -80,8 +101,9 @@ const FileUpload = (props) => {
       setTimeout(() => setUploadMessage(""), 3000);
     } catch (error) {
       console.error("Error uploading files:", error);
+      setUploadMessage("Error uploading files."); // Optionally set an error message
     } finally {
-      setLoading(false); // Set loading to false after uploading
+      setLoading(false); // Set loading to false after everything is done
     }
   };
 
