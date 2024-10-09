@@ -19,14 +19,9 @@ const FileUpload = (props) => {
     const fetchImages = async () => {
       setLoading(true);
       try {
-<<<<<<< HEAD
         const response = await axios.get("http://localhost:3000/api/photos");
         console.log("Fetched images:", response.data); // Log the fetched images
         setImages(response.data.reverse());
-=======
-        const response = await axios.get("https://proekt.onrender.com/api/photos");
-        setImages(response.data);
->>>>>>> 9904f5d48a927205c65d25ebb0f8e13545f26f25
       } catch (error) {
         console.error("Error fetching images:", error);
       } finally {
@@ -85,30 +80,19 @@ const FileUpload = (props) => {
     setUploadMessage(""); // Clear any previous messages
 
     try {
-<<<<<<< HEAD
       // Upload the files
       await axios.post("http://localhost:3000/api/photos/upload", formData, {
-=======
-      await axios.post("https://proekt.onrender.com/api/photos/upload", formData, {
->>>>>>> 9904f5d48a927205c65d25ebb0f8e13545f26f25
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-<<<<<<< HEAD
       // Fetch images immediately after successful upload
       const response = await axios.get("http://localhost:3000/api/photos");
       setImages(response.data.reverse());
 
       // Set the success message after fetching the images
       setUploadMessage("Your uploads are live!");
-=======
-      // Fetch images again to see the newly uploaded images
-      const response = await axios.get("https://proekt.onrender.com/api/photos");
-      setImages(response.data);
-      setUploadMessage(`Your uploads are live!`);
->>>>>>> 9904f5d48a927205c65d25ebb0f8e13545f26f25
 
       // Clear the name of the first file after upload
       setFirstFileName(""); // Reset file name after upload
