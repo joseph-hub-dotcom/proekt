@@ -36,7 +36,7 @@ const AdminPanel = () => {
     const fetchAdminPassword = async () => {
       if (isModalOpen) {
         try {
-          const response = await axios.get("http://localhost:3000/api/admin/password");
+          const response = await axios.get("https://proekt.onrender.com/api/admin/password");
           setCorrectPassword(response.data.password);
         } catch (error) {
           console.error("Error fetching admin password:", error);
@@ -51,7 +51,7 @@ const AdminPanel = () => {
   const fetchMedia = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:3000/api/photos");
+      const response = await axios.get("https://proekt.onrender.com/api/photos");
       if (!response.data || response.data.length === 0) {
         throw new Error("No media found.");
       }
@@ -84,7 +84,7 @@ const AdminPanel = () => {
     const confirmed = window.confirm("Are you sure you want to delete this picture?");
     if (confirmed) {
       try {
-        await axios.delete(`http://localhost:3000/api/photos/delete/${id}`);
+        await axios.delete(`https://proekt.onrender.com/api/photos/delete/${id}`);
         setVisibleMedia(visibleMedia.filter((item) => item._id !== id)); // Update visible media
         setMedia(media.filter((item) => item._id !== id)); // Update full media list
       } catch (error) {
@@ -110,7 +110,7 @@ const AdminPanel = () => {
 
   const downloadAllImages = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/photos/download", {
+      const response = await axios.get("https://proekt.onrender.com/api/photos/download", {
         responseType: "blob",
       });
 
